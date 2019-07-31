@@ -1,0 +1,11 @@
+language: go
+
+go:
+- 1.x
+node_js:
+- 12
+
+install: 
+- cd okr2go-ui && yarn install --ignore-optional && yarn build --prod
+- go get -u github.com/gobuffalo/packr/packr
+script: packr build

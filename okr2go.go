@@ -8,8 +8,12 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/pkg/browser"
+
+	"github.com/gobuffalo/packr"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
+	"github.com/kyokomi/emoji"
 	"github.com/oxisto/go-httputil"
 	"github.com/russross/blackfriday"
 	log "github.com/sirupsen/logrus"
@@ -17,6 +21,10 @@ import (
 
 func main() {
 	log.SetLevel(log.DebugLevel)
+
+	emoji.Printf("Welcome to okr2go! Your :books:tracker is ready at http://localhost:4300.\n")
+
+	browser.OpenURL("http://localhost:4300")
 
 	router := handlers.LoggingHandler(&httputil.LogWriter{Level: log.InfoLevel, Component: "http"}, NewRouter())
 	err := http.ListenAndServe("0.0.0.0:4300", router)
@@ -41,9 +49,12 @@ type KeyResult struct {
 
 // NewRouter returns a configured mux router containing all REST endpoints
 func NewRouter() *mux.Router {
+	// pack angular ui
+	box := packr.NewBox("./okr2go-ui/dist/okr2go-ui")
+
 	router := mux.NewRouter().StrictSlash(true)
 	router.HandleFunc("/api/objectives", GetObjectives)
-	router.PathPrefix("/").Handler(http.FileServer(http.Dir("./okr2go-ui/dist")))
+	router.PathPrefix("/").Handler(http.FileServer(box))
 
 	return router
 }
@@ -66,6 +77,9 @@ func ParseMarkdown(path string) ([]*Objective, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	// strip window-style \r from the data, otherwise the Markdown library is doing weird things
+	data = []byte(strings.ReplaceAll(string(data), "\r", ""))
 
 	md := blackfriday.New()
 	ast := md.Parse(data)
@@ -181,7 +195,7 @@ func (o *ObjectiveWalker) Walk(node *blackfriday.Node, entering bool) blackfrida
 				o.objective.KeyResults = append(o.objective.KeyResults, keyResult)
 			}
 		} else {
-			log.Debugf("Appending '%s' to descrption", node.Literal)
+			log.Debugf("Appending '%s' to description", node.Literal)
 
 			// otherwise, just append it to the description
 			if o.objective.Description == "" {
@@ -190,7 +204,11 @@ func (o *ObjectiveWalker) Walk(node *blackfriday.Node, entering bool) blackfrida
 				o.objective.Description += " " + text
 			}
 		}
+
+		return blackfriday.GoToNext
 	}
+
+	log.Debugf("Still here... Why? %v", node)
 
 	// do not continue if there is an error and store the error
 	if err != nil {
