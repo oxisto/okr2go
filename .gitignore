@@ -4,6 +4,8 @@
 *.dll
 *.so
 *.dylib
+okr2go
+debug
 
 # Test binary, build with `go test -c`
 *.test
