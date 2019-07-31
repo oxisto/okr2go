@@ -6,4 +6,8 @@ export class Objective {
 export class KeyResult {
     id: string
     name: string
+    current: number
+    target: number
+    contributors: string[]
+    comments: string[]
 }
