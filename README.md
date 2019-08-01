@@ -24,3 +24,7 @@ Install Go dependencies and build using `packr`.
 go mod download
 packr build
 ```
+
+## Launch
+
+Just launch `okr2go` directly. A browser window with the web ui should open automatically.
