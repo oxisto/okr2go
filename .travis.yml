@@ -11,4 +11,5 @@ env:
   - GO111MODULE=on  
 
 script: 
+  - go get -u github.com/gobuffalo/packr/packr
   - ./build.sh

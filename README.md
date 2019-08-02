@@ -6,13 +6,13 @@ Ideally, this Markdown file is stored in a git repository, if you want to synchr
 
 ## Build
 
-Install `packr`.
+Install `packr`, which is used to include the web frontend in the final binary.
 
 ```
 go get -u github.com/gobuffalo/packr/packr
 ```
 
-Run the included build script to install all dependencies (Angular and Go) and build executable with the packed web frontend.
+Run the included build script to install all dependencies (Angular and Go) and build an executable with the packed web frontend.
 
 ```
 ./build.sh
