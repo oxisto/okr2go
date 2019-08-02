@@ -1,6 +1,6 @@
 # okr2go
 
-[![Build Status](https://travis-ci.com/oxisto/okr2go.svg?branch=master)](https://travis-ci.com/oxisto/okr2go) [![](https://godoc.org/github.com/oxisto/okr2go?status.svg)](https://godoc.org/github.com/oxisto/okr2go)
+[![CircleCI](https://circleci.com/gh/oxisto/okr2go.svg?style=shield)](https://circleci.com/gh/oxisto/okr2go) [![](https://godoc.org/github.com/oxisto/okr2go?status.svg)](https://godoc.org/github.com/oxisto/okr2go)
 
 
 okr2go (as in *to go*)  is a simple tracker for your Objective and Key Results (OKR) that you can use locally just using a Markdown file and thus is available *to go*.

@@ -1,4 +1,4 @@
-package main
+package okr2go
 
 import (
 	"testing"

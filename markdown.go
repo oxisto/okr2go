@@ -1,84 +1,14 @@
-package main
+package okr2go
 
 import (
 	"errors"
 	"fmt"
 	"io/ioutil"
-	"net/http"
-	"os"
 	"strconv"
 	"strings"
 
-	"github.com/pkg/browser"
-
-	"github.com/gobuffalo/packr"
-	"github.com/gorilla/handlers"
-	"github.com/gorilla/mux"
-	"github.com/kyokomi/emoji"
-	"github.com/oxisto/go-httputil"
 	"github.com/russross/blackfriday"
-	"github.com/sirupsen/logrus"
 )
-
-var log = logrus.New()
-
-func main() {
-	file, err := os.OpenFile("okr2go.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
-	if err == nil {
-		log.Out = file
-	}
-
-	log.SetLevel(logrus.DebugLevel)
-
-	emoji.Printf("Welcome to okr2go! Your :books:tracker is ready at http://localhost:4300.\n")
-
-	browser.OpenURL("http://localhost:4300")
-
-	router := handlers.LoggingHandler(&httputil.LogWriter{Logger: log, Level: logrus.InfoLevel, Component: "http"}, NewRouter())
-	err = http.ListenAndServe("0.0.0.0:4300", router)
-
-	log.Errorf("An error occurred: %v", err)
-}
-
-type Objective struct {
-	Name        string      `json:"name"`
-	Description string      `json:"description"`
-	KeyResults  []KeyResult `json:"keyResults"`
-}
-
-type KeyResult struct {
-	ID           string   `json:"id"`
-	Name         string   `json:"name"`
-	Current      int64    `json:"current"`
-	Target       int64    `json:"target"`
-	Contributors []string `json:"contributors"`
-	Comments     []string `json:"comments"`
-}
-
-// NewRouter returns a configured mux router containing all REST endpoints
-func NewRouter() *mux.Router {
-	// pack angular ui
-	box := packr.NewBox("./okr2go-ui/dist/okr2go-ui")
-
-	router := mux.NewRouter().StrictSlash(true)
-	router.HandleFunc("/api/objectives", GetObjectives)
-	router.PathPrefix("/").Handler(http.FileServer(box))
-
-	return router
-}
-
-func GetObjectives(w http.ResponseWriter, r *http.Request) {
-	var err error
-
-	objectives, err := ParseMarkdown("example.md")
-
-	if err != nil {
-		httputil.JSONResponse(w, r, nil, err)
-		return
-	}
-
-	httputil.JSONResponse(w, r, objectives, err)
-}
 
 func ParseMarkdown(path string) ([]*Objective, error) {
 	data, err := ioutil.ReadFile("example.md")
