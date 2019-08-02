@@ -11,7 +11,6 @@ type Objective struct {
 }
 
 func LoadObjectives() (err error) {
-	// @todo Cache objectives in memory instead of loading them from markdown in every request
 	objectives, err = ParseMarkdown("example.md")
 
 	if err != nil {
