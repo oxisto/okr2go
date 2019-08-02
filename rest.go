@@ -18,6 +18,7 @@ func NewRouter() *mux.Router {
 	router := mux.NewRouter().StrictSlash(true)
 	router.HandleFunc("/api/objectives", GetObjectives)
 	router.HandleFunc("/api/objectives/{objectiveID}/{resultID}/plus", ResultPlusOne)
+	router.HandleFunc("/api/objectives/{objectiveID}/{resultID}/minus", ResultMinusOne)
 	router.PathPrefix("/").Handler(http.FileServer(box))
 
 	return router
@@ -26,32 +27,17 @@ func NewRouter() *mux.Router {
 func GetObjectives(w http.ResponseWriter, r *http.Request) {
 	var err error
 
-	objectives, err := ParseMarkdown("example.md")
-
-	if err != nil {
-		httputil.JSONResponse(w, r, nil, err)
-		return
-	}
-
 	httputil.JSONResponse(w, r, objectives, err)
 }
 
+// @todo Combine ResultPlusOne and ResultMinusOne functions
 func ResultPlusOne(w http.ResponseWriter, r *http.Request) {
 	var (
-		err        error
-		objectives []*Objective
-		result     *KeyResult
+		err    error
+		result *KeyResult
 	)
 
-	// @todo Cache objectives in memory instead of loading them from markdown in every request
-	objectives, err = ParseMarkdown("example.md")
-
-	if err != nil {
-		httputil.JSONResponse(w, r, nil, err)
-		return
-	}
-
-	result, err = getResultFromRequest(objectives, w, r)
+	result, err = getResultFromRequest(w, r)
 	if err != nil {
 		httputil.JSONResponseWithStatus(w, r, nil, err, http.StatusBadRequest)
 		return
@@ -63,7 +49,7 @@ func ResultPlusOne(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if result.Current == result.Target {
-		httputil.JSONResponseWithStatus(w, r, nil, nil, http.StatusNotModified)
+		httputil.JSONResponseWithStatus(w, r, result, nil, http.StatusNotModified)
 		return
 	}
 
@@ -75,7 +61,37 @@ func ResultPlusOne(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
-func getObjectiveFromRequest(objectives []*Objective, w http.ResponseWriter, r *http.Request) (objective *Objective, err error) {
+func ResultMinusOne(w http.ResponseWriter, r *http.Request) {
+	var (
+		err    error
+		result *KeyResult
+	)
+
+	result, err = getResultFromRequest(w, r)
+	if err != nil {
+		httputil.JSONResponseWithStatus(w, r, nil, err, http.StatusBadRequest)
+		return
+	}
+
+	if result == nil {
+		httputil.JSONResponseWithStatus(w, r, nil, err, http.StatusNotFound)
+		return
+	}
+
+	if result.Current == 0 {
+		httputil.JSONResponseWithStatus(w, r, result, nil, http.StatusNotModified)
+		return
+	}
+
+	result.Current--
+
+	// @todo Persist changes
+
+	httputil.JSONResponseWithStatus(w, r, result, nil, http.StatusOK)
+	return
+}
+
+func getObjectiveFromRequest(w http.ResponseWriter, r *http.Request) (objective *Objective, err error) {
 	var (
 		ok                bool
 		objectiveID       int
@@ -90,16 +106,12 @@ func getObjectiveFromRequest(objectives []*Objective, w http.ResponseWriter, r *
 		return nil, errors.New("Could not parse objectiveID")
 	}
 
-	if objectiveID < 0 || objectiveID > len(objectives) {
-		return nil, nil
-	}
-
-	objective = objectives[objectiveID]
+	objective = objectives.FindObjective(objectiveID)
 
 	return objective, nil
 }
 
-func getResultFromRequest(objectives []*Objective, w http.ResponseWriter, r *http.Request) (result *KeyResult, err error) {
+func getResultFromRequest(w http.ResponseWriter, r *http.Request) (result *KeyResult, err error) {
 	var (
 		ok        bool
 		objective *Objective
@@ -108,7 +120,7 @@ func getResultFromRequest(objectives []*Objective, w http.ResponseWriter, r *htt
 
 	// return if we either have an error (which we pass down, resulting in a BadRequest)
 	// or if the objective was not found (resulting in a NotFound)
-	if objective, err = getObjectiveFromRequest(objectives, w, r); err != nil || objective == nil {
+	if objective, err = getObjectiveFromRequest(w, r); err != nil || objective == nil {
 		return nil, err
 	}
 

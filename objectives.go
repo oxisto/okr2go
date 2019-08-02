@@ -1,15 +1,38 @@
 package okr2go
 
+var objectives Objectives
+
+type Objectives []*Objective
+
 type Objective struct {
-	Name        string      `json:"name"`
-	Description string      `json:"description"`
-	KeyResults  []KeyResult `json:"keyResults"`
+	Name        string       `json:"name"`
+	Description string       `json:"description"`
+	KeyResults  []*KeyResult `json:"keyResults"`
+}
+
+func LoadObjectives() (err error) {
+	// @todo Cache objectives in memory instead of loading them from markdown in every request
+	objectives, err = ParseMarkdown("example.md")
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (o Objectives) FindObjective(objectiveID int) *Objective {
+	if objectiveID < 0 || objectiveID > len(o) {
+		return nil
+	}
+
+	return o[objectiveID]
 }
 
 func (o *Objective) FindKeyResult(resultID string) *KeyResult {
 	for _, result := range o.KeyResults {
 		if result.ID == resultID {
-			return &result
+			return result
 		}
 	}
 

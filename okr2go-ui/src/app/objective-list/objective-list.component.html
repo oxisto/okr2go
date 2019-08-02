@@ -6,18 +6,27 @@
             </div>
         </div>
         <p class="mb-1">{{ entry.value.description }} </p>
-        <table class="mt-2 table table-hover">
+        <table class="mt-2 table">
             <tbody>
                 <tr *ngFor="let keyResult of entry.value.keyResults">
                     <th scope="row">{{ keyResult.id }}</th>
                     <td>{{ keyResult.name }}</td>
                     <td>
-                        <ngb-progressbar class="mt-auto mb-auto" type="info"
+                        <button (click)="onMinus(entry.key, keyResult)" class="btn btn-sm btn-secondary">
+                            <fa-icon [icon]="faMinus"></fa-icon>
+                        </button>
+
+                        <ngb-progressbar style="min-width: 300px" class="btn mt-auto mb-auto"
+                            [type]="getTypeForKeyResult(keyResult)"
                             [value]="keyResult.current / keyResult.target * 100">Current
                             progress
                             is
                             <b>{{ keyResult.current }} /
                                 {{ keyResult.target }}</b>...</ngb-progressbar>
+
+                        <button (click)="onPlus(entry.key, keyResult)" class="btn btn-sm btn-secondary">
+                            <fa-icon [icon]="faPlus"></fa-icon>
+                        </button>
                     </td>
                     <td>{{ keyResult.contributors.join(', ') }}</td>
                     <td>{{ keyResult.comments.join(', ')}}</td>

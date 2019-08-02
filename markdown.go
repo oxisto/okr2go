@@ -93,7 +93,7 @@ func (o *ObjectiveWalker) Walk(node *blackfriday.Node, entering bool) blackfrida
 
 		// its probably the objectives table
 		if strings.HasPrefix(text, "\n|") {
-			o.objective.KeyResults = []KeyResult{}
+			o.objective.KeyResults = []*KeyResult{}
 
 			// split per line first
 			lines := strings.Split(text, "\n")
@@ -130,7 +130,7 @@ func (o *ObjectiveWalker) Walk(node *blackfriday.Node, entering bool) blackfrida
 				keyResult.Comments = trimAndSplit(fields[6])
 
 				// add the result
-				o.objective.KeyResults = append(o.objective.KeyResults, keyResult)
+				o.objective.KeyResults = append(o.objective.KeyResults, &keyResult)
 			}
 		} else {
 			log.Debugf("Appending '%s' to description", node.Literal)

@@ -19,6 +19,11 @@ func main() {
 
 	browser.OpenURL("http://localhost:4300")
 
+	if err := okr2go.LoadObjectives(); err != nil {
+		log.Errorf("An error occurred: %v", err)
+		return
+	}
+
 	router := handlers.LoggingHandler(&httputil.LogWriter{Logger: log, Level: logrus.InfoLevel, Component: "http"}, okr2go.NewRouter())
 	err := http.ListenAndServe("0.0.0.0:4300", router)
 
