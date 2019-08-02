@@ -6,6 +6,16 @@ type Objective struct {
 	KeyResults  []KeyResult `json:"keyResults"`
 }
 
+func (o *Objective) FindKeyResult(resultID string) *KeyResult {
+	for _, result := range o.KeyResults {
+		if result.ID == resultID {
+			return &result
+		}
+	}
+
+	return nil
+}
+
 type KeyResult struct {
 	ID           string   `json:"id"`
 	Name         string   `json:"name"`
