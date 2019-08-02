@@ -9,7 +9,7 @@ Ideally, this Markdown file is stored in a git repository, if you want to synchr
 
 ## Build
 
-okr2go requires golang >= 1.11, [packr](github.com/gobuffalo/packr/packr), and yarn installed.
+okr2go requires golang >= 1.11, [packr](https://github.com/gobuffalo/packr), and yarn installed.
 
 ### Install golang
 
