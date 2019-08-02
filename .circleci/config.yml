@@ -23,6 +23,5 @@ jobs:
           paths:
             - "/go/pkg/mod"
       - store_artifacts:
-          path: okr2go
-          destination: bin/linux-x64/okr2go
-
+          path: bin
+          destination: bin

@@ -53,7 +53,7 @@ go get -u github.com/gobuffalo/packr/packr
 
 ### Run build script
 
-Run the included build script to install all dependencies (Angular and Go) and build an executable with the packed web frontend.
+Run the included build script to install all dependencies (Angular and Go) and build an executable with the packed web frontend. This will also run `go install`, so that your system-specific executable is available globally, if you have the `go/bin` directory in your path.
 
 ```
 ./build.sh
@@ -61,4 +61,4 @@ Run the included build script to install all dependencies (Angular and Go) and b
 
 ## Launch
 
-Just launch `okr2go` directly. A browser window with the web ui should open automatically.
+Just launch the `okr2go` executable from the `bin` folder of your system, i.e. `bin/darwin-amd64`. A browser window with the web ui should open automatically.
