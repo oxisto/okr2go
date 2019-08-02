@@ -55,7 +55,7 @@ func ResultPlusOne(w http.ResponseWriter, r *http.Request) {
 
 	result.Current++
 
-	// @todo Persist changes
+	SaveObjectives()
 
 	httputil.JSONResponseWithStatus(w, r, result, nil, http.StatusOK)
 	return
@@ -85,7 +85,7 @@ func ResultMinusOne(w http.ResponseWriter, r *http.Request) {
 
 	result.Current--
 
-	// @todo Persist changes
+	SaveObjectives()
 
 	httputil.JSONResponseWithStatus(w, r, result, nil, http.StatusOK)
 	return

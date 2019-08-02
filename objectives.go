@@ -20,6 +20,16 @@ func LoadObjectives() (err error) {
 	return nil
 }
 
+func SaveObjectives() (err error) {
+	err = WriteMarkdown("example.md", objectives)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (o Objectives) FindObjective(objectiveID int) *Objective {
 	if objectiveID < 0 || objectiveID > len(o) {
 		return nil

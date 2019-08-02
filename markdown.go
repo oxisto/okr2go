@@ -84,15 +84,8 @@ func (o *ObjectiveWalker) Walk(node *blackfriday.Node, entering bool) blackfrida
 		// yay, more text. could either be part of the description or the objective table
 		text := string(node.Literal)
 
-		// not really a good way to parse this
-		if strings.Contains(text, "| -- |") {
-			// this is the table heading, just ignore it
-
-			return blackfriday.SkipChildren
-		}
-
 		// its probably the objectives table
-		if strings.HasPrefix(text, "\n|") {
+		if strings.HasPrefix(text, "|") {
 			o.objective.KeyResults = []*KeyResult{}
 
 			// split per line first
@@ -104,15 +97,19 @@ func (o *ObjectiveWalker) Walk(node *blackfriday.Node, entering bool) blackfrida
 					continue
 				}
 
-				keyResult := KeyResult{}
-
 				// split fields
 				fields := strings.Split(line, "|")
+				keyResult := KeyResult{}
 
 				log.Debugf("Parsing objective content %+v...\n", fields)
 
 				// ID
 				keyResult.ID = strings.TrimSpace(fields[1])
+
+				// skip header
+				if keyResult.ID == "" || keyResult.ID == "Key result" || strings.HasPrefix(keyResult.ID, "-") {
+					continue
+				}
 
 				// Name
 				keyResult.Name = strings.TrimSpace(fields[2])
@@ -191,4 +188,46 @@ func ParseHeading(node *blackfriday.Node) (*Objective, error) {
 	}
 
 	return &objective, nil
+}
+
+func WriteMarkdown(file string, objectives []*Objective) error {
+	builder := strings.Builder{}
+
+	var headerTemplate = "| %-5s | %-40s | %-8s | %-8s | %-20s | %-20s |\n"
+	var rowTemplate = "| %-5s | %-40s | %-8d | %-8d | %-20s | %-20s |\n"
+
+	for _, objective := range objectives {
+		// write heading
+		builder.WriteString("# " + objective.Name + "\n\n")
+		builder.WriteString(objective.Description + "\n\n")
+
+		// write result table header
+		builder.WriteString(fmt.Sprintf(headerTemplate,
+			"",
+			"Key result",
+			"current",
+			"target",
+			"contributors",
+			"comments"))
+		builder.WriteString(fmt.Sprintf(headerTemplate,
+			strings.Repeat("-", 5),
+			strings.Repeat("-", 40),
+			strings.Repeat("-", 8),
+			strings.Repeat("-", 8),
+			strings.Repeat("-", 20),
+			strings.Repeat("-", 20)))
+
+		for _, keyResult := range objective.KeyResults {
+			builder.WriteString(fmt.Sprintf(rowTemplate,
+				keyResult.ID,
+				keyResult.Name,
+				keyResult.Current,
+				keyResult.Target,
+				strings.Join(keyResult.Contributors, ", "),
+				strings.Join(keyResult.Comments, ", "),
+			))
+		}
+	}
+
+	return ioutil.WriteFile(file, []byte(builder.String()), 0666)
 }
