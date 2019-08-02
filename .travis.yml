@@ -10,9 +10,5 @@ before_install:
 env:
   - GO111MODULE=on  
 
-install: 
-  - cd okr2go-ui && yarn install --ignore-optional && yarn build --prod --no-progress && cd ..
-  - go get -u github.com/gobuffalo/packr/packr
-  - go mod download
 script: 
-  - packr build
+  - ./build.sh

@@ -12,17 +12,10 @@ Install `packr`.
 go get -u github.com/gobuffalo/packr/packr
 ```
 
-Install angular dependencies and build web frontend.
+Run the included build script to install all dependencies (Angular and Go) and build executable with the packed web frontend.
 
 ```
-cd okr2go-ui && yarn install --ignore-optional && yarn build --prod
-```
-
-Install Go dependencies and build using `packr`.
-
-```
-go mod download
-packr build
+./build.sh
 ```
 
 ## Launch

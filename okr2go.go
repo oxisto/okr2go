@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"os"
 	"strconv"
 	"strings"
 
@@ -16,18 +17,25 @@ import (
 	"github.com/kyokomi/emoji"
 	"github.com/oxisto/go-httputil"
 	"github.com/russross/blackfriday"
-	log "github.com/sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 )
 
+var log = logrus.New()
+
 func main() {
-	log.SetLevel(log.DebugLevel)
+	file, err := os.OpenFile("okr2go.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+	if err == nil {
+		log.Out = file
+	}
+
+	log.SetLevel(logrus.DebugLevel)
 
 	emoji.Printf("Welcome to okr2go! Your :books:tracker is ready at http://localhost:4300.\n")
 
 	browser.OpenURL("http://localhost:4300")
 
-	router := handlers.LoggingHandler(&httputil.LogWriter{Level: log.InfoLevel, Component: "http"}, NewRouter())
-	err := http.ListenAndServe("0.0.0.0:4300", router)
+	router := handlers.LoggingHandler(&httputil.LogWriter{Logger: log, Level: logrus.InfoLevel, Component: "http"}, NewRouter())
+	err = http.ListenAndServe("0.0.0.0:4300", router)
 
 	log.Errorf("An error occurred: %v", err)
 }
@@ -207,9 +215,6 @@ func (o *ObjectiveWalker) Walk(node *blackfriday.Node, entering bool) blackfrida
 
 		return blackfriday.GoToNext
 	}
-
-	log.Debugf("Still here... Why? %v", node)
-
 	// do not continue if there is an error and store the error
 	if err != nil {
 		o.err = err
