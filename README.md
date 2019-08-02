@@ -18,23 +18,39 @@ sudo apt-get update
 sudo apt-get install golang-go
 ```
 
+On macOS, use `brew` to install Go 1.12:
+
+```
+brew install go
+```
+
 ### Install yarn
 
 On Debian/Ubuntu, the latest yarn version can be installed from the following ppa:
+
 ```
 curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
 echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
 sudo apt-get update && sudo apt-get install yarn
 ```
 
-### Install `packr`.
+On macOS, use `brew` to install yarn:
+
+```
+brew install yarn
+```
+
+### Install packr.
+
+Install `packr`, which is used to include the web frontend in the final binary.
 
 ```
 go get -u github.com/gobuffalo/packr/packr
 ```
 
-### Build okr2go
-Run the included build script to install all dependencies (Angular and Go) and build executable with the packed web frontend.
+### Run build script
+
+Run the included build script to install all dependencies (Angular and Go) and build an executable with the packed web frontend.
 
 ```
 ./build.sh
