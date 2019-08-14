@@ -35,6 +35,26 @@ export class ObjectiveListComponent implements OnInit {
     })
   }
 
+  onNewResult(objectiveId: number) {
+    const name = prompt("Enter the name for the results", "")
+    if (name == null) {
+      return;
+    }
+
+    const target = prompt("Enter the target", "")
+    if (target == null) {
+      return;
+    }
+
+    const result = new KeyResult();
+    result.name = name;
+    result.target = target;
+
+    this.objectiveService.postKeyResult(objectiveId, result).subscribe(_ => {
+      this.refreshObjectives();
+    });
+  }
+
   refreshObjectives() {
     this.objectiveService.getObjectives().subscribe(objectives => this.objectives = objectives);
   }

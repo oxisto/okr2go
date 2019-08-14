@@ -31,6 +31,7 @@
                     <td>{{ keyResult.contributors.join(', ') }}</td>
                     <td>{{ keyResult.comments.join(', ')}}</td>
                 </tr>
+                <button (click)="onNewResult(entry.key)" class="btn btn-primary">Add Key Result</button>
             </tbody>
         </table>
         <small>Still working hard</small>

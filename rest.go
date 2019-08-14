@@ -1,6 +1,7 @@
 package okr2go
 
 import (
+	"encoding/json"
 	"errors"
 	"net/http"
 	"strconv"
@@ -17,11 +18,41 @@ func NewRouter() *mux.Router {
 
 	router := mux.NewRouter().StrictSlash(true)
 	router.HandleFunc("/api/objectives", GetObjectives)
-	router.HandleFunc("/api/objectives/{objectiveID}/{resultID}/plus", ResultPlusOne)
-	router.HandleFunc("/api/objectives/{objectiveID}/{resultID}/minus", ResultMinusOne)
+	router.HandleFunc("/api/objectives/{objectiveID}/results/{resultID}/plus", ResultPlusOne)
+	router.HandleFunc("/api/objectives/{objectiveID}/results/{resultID}/minus", ResultMinusOne)
+	router.Methods("POST").Path("/api/objectives/{objectiveID}/results").HandlerFunc(PostKeyResult)
 	router.PathPrefix("/").Handler(http.FileServer(box))
 
 	return router
+}
+
+func PostKeyResult(w http.ResponseWriter, r *http.Request) {
+	var (
+		result    KeyResult
+		objective *Objective
+		err       error
+	)
+
+	// @todo Create utility function for the NotFound/BadRequest construct
+	// @body Return StatusNotFound if object is nil and StatusBadRequest if error
+	objective, err = getObjectiveFromRequest(w, r)
+	if err != nil {
+		httputil.JSONResponseWithStatus(w, r, nil, err, http.StatusBadRequest)
+		return
+	}
+
+	if objective == nil {
+		httputil.JSONResponseWithStatus(w, r, nil, err, http.StatusNotFound)
+		return
+	}
+
+	if err = json.NewDecoder(r.Body).Decode(&result); err != nil {
+		httputil.JSONResponse(w, r, nil, err)
+	}
+
+	objective.KeyResults = append(objective.KeyResults, &result)
+
+	httputil.JSONResponse(w, r, result, nil)
 }
 
 func GetObjectives(w http.ResponseWriter, r *http.Request) {

@@ -19,13 +19,19 @@ export class ObjectiveService {
   }
 
   resultPlusOne(objectiveId: number, resultId: string): Observable<KeyResult> {
-    return this.http.get<Objective[]>('/api/objectives/' + objectiveId + '/' + resultId + '/plus').pipe(map(data => {
+    return this.http.get<Objective[]>('/api/objectives/' + objectiveId + '/results/' + resultId + '/plus').pipe(map(data => {
       return Object.assign(new KeyResult, data);
     }));
   }
 
   resultMinusOne(objectiveId: number, resultId: string): Observable<KeyResult> {
-    return this.http.get<Objective[]>('/api/objectives/' + objectiveId + '/' + resultId + '/minus').pipe(map(data => {
+    return this.http.get<Objective[]>('/api/objectives/' + objectiveId + '/results/' + resultId + '/minus').pipe(map(data => {
+      return Object.assign(new KeyResult, data);
+    }));
+  }
+
+  postKeyResult(objectiveId: number, result: KeyResult): Observable<KeyResult> {
+    return this.http.post<KeyResult>('/api/objectives/' + objectiveId + '/results', result).pipe(map(data => {
       return Object.assign(new KeyResult, data);
     }));
   }
