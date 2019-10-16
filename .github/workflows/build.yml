@@ -1,0 +1,28 @@
+name: Go
+on: [push]
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Set up Go 1.12
+      uses: actions/setup-go@v1
+      with:
+        go-version: 1.12
+      id: go
+
+    - name: Check out code into the Go module directory
+      uses: actions/checkout@v1
+
+    - name: Update Node.js and npm
+      run: |
+        curl -sSL "https://nodejs.org/dist/v12.7.0/node-v12.7.0-linux-x64.tar.xz" | sudo tar --strip-components=2 -xJ -C /usr/local/bin/ node-v12.7.0-linux-x64/bin/node
+        curl -o- -L https://yarnpkg.com/install.sh | bash
+
+    - name: Install packr
+      run: |
+         go get -u github.com/gobuffalo/packr/packr
+
+    - name: Build
+      run: ./build.sh
