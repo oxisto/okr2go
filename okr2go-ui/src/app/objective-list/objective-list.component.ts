@@ -48,7 +48,7 @@ export class ObjectiveListComponent implements OnInit {
 
     const result = new KeyResult();
     result.name = name;
-    result.target = target;
+    result.target = parseInt(target);
 
     this.objectiveService.postKeyResult(objectiveId, result).subscribe(_ => {
       this.refreshObjectives();
