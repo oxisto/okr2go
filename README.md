@@ -1,7 +1,6 @@
 # okr2go
 
-[![CircleCI](https://circleci.com/gh/oxisto/okr2go.svg?style=shield)](https://circleci.com/gh/oxisto/okr2go) [![](https://godoc.org/github.com/oxisto/okr2go?status.svg)](https://godoc.org/github.com/oxisto/okr2go)
-
+[![Actions Status](https://github.com/oxisto/okr2go/workflows/build/badge.svg)](https://github.com/oxisto/okr2go/actions)
 
 okr2go (as in *to go*)  is a simple tracker for your Objective and Key Results (OKR) that you can use locally just using a Markdown file and thus is available *to go*.
 
@@ -21,7 +20,7 @@ sudo apt-get update
 sudo apt-get install golang-go
 ```
 
-On macOS, use `brew` to install Go 1.12:
+On macOS, use `brew` to install Go:
 
 ```
 brew install go
