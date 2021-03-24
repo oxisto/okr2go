@@ -4,11 +4,11 @@
 
 okr2go (as in *to go*)  is a simple tracker for your Objective and Key Results (OKR) that you can use locally just using a Markdown file and thus is available *to go*.
 
-Ideally, this Markdown file is stored in a git repository, if you want to synchronize it with others. It also includes a simple Angular-based web frontent to view (and in the future, edit) your objectives.
+Ideally, this Markdown file is stored in a git repository, if you want to synchronize it with others. It also includes a simple Angular-based web frontend to view (and in the future, edit) your objectives.
 
 ## Build
 
-okr2go requires golang >= 1.11, [packr](https://github.com/gobuffalo/packr), and yarn installed.
+okr2go requires golang >= 1.16 and yarn installed.
 
 ### Install golang
 
@@ -40,14 +40,6 @@ On macOS, use `brew` to install yarn:
 
 ```
 brew install yarn
-```
-
-### Install packr.
-
-Install `packr`, which is used to include the web frontend in the final binary.
-
-```
-go get -u github.com/gobuffalo/packr/packr
 ```
 
 ### Run build script

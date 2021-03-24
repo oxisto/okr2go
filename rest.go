@@ -1,27 +1,31 @@
 package okr2go
 
 import (
+	"embed"
 	"encoding/json"
 	"errors"
+	"io/fs"
 	"net/http"
 	"strconv"
 
-	"github.com/gobuffalo/packr"
 	"github.com/gorilla/mux"
 	"github.com/oxisto/go-httputil"
 )
 
+//go:embed okr2go-ui/dist/okr2go-ui/*
+var content embed.FS
+
 // NewRouter returns a configured mux router containing all REST endpoints
 func NewRouter() *mux.Router {
-	// pack angular ui
-	box := packr.NewBox("./okr2go-ui/dist/okr2go-ui")
-
 	router := mux.NewRouter().StrictSlash(true)
 	router.HandleFunc("/api/objectives", GetObjectives)
 	router.HandleFunc("/api/objectives/{objectiveID}/results/{resultID}/plus", ResultPlusOne)
 	router.HandleFunc("/api/objectives/{objectiveID}/results/{resultID}/minus", ResultMinusOne)
 	router.Methods("POST").Path("/api/objectives/{objectiveID}/results").HandlerFunc(PostKeyResult)
-	router.PathPrefix("/").Handler(http.FileServer(box))
+
+	fsys, _ := fs.Sub(content, "okr2go-ui/dist/okr2go-ui")
+
+	router.PathPrefix("/").Handler(http.FileServer(http.FS(fsys)))
 
 	return router
 }
