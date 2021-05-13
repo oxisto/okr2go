@@ -4,21 +4,19 @@
 
 okr2go (as in *to go*)  is a simple tracker for your Objective and Key Results (OKR) that you can use locally just using a Markdown file and thus is available *to go*.
 
-Ideally, this Markdown file is stored in a git repository, if you want to synchronize it with others. It also includes a simple Angular-based web frontend to view (and in the future, edit) your objectives.
+Ideally, this Markdown file is stored in a git repository, if you want to synchronize it with others. It also includes a simple React-based web frontend to view (and in the future, edit) your objectives.
 
-## Build
+## Use a Release
 
-okr2go requires golang >= 1.16 and yarn installed.
+Fetch a binary from the latest GitHub release corresponding to your system architecture and start it using `./okr2go`. A browser window with the web ui should open automatically.
 
-### Install golang
+## Build from Source
 
-On Ubuntu 16.04, 18.04, 18.10 and 19.04, use the `longsleep/golang-backports` ppa to install Go 1.12:
+okr2go requires Go >= 1.16 and yarn installed.
 
-```
-sudo add-apt-repository ppa:longsleep/golang-backports
-sudo apt-get update
-sudo apt-get install golang-go
-```
+### Install Go
+
+On Linux, follow the instructions at https://golang.org/doc/install or an instruction related to your distribution.
 
 On macOS, use `brew` to install Go:
 
@@ -44,12 +42,12 @@ brew install yarn
 
 ### Run build script
 
-Run the included build script to install all dependencies (Angular and Go) and build an executable with the packed web frontend. This will also run `go install`, so that your system-specific executable is available globally, if you have the `go/bin` directory in your path.
+Run the included build script to install all dependencies (React and Go) and build an executable with the packed web frontend. This will also run `go install`, so that your system-specific executable is available globally, if you have the `go/bin` directory in your path.
 
 ```
 ./build.sh
 ```
 
-## Launch
+### Launch
 
-Just launch the `okr2go` executable from the `bin` folder of your system, i.e. `bin/darwin-amd64`. A browser window with the web ui should open automatically.
+Just launch the `okr2go` executable from the `bin` folder representing your system, i.e. `bin/darwin-arm64/okr2go`. A browser window with the web ui should open automatically.
