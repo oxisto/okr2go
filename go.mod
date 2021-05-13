@@ -4,7 +4,7 @@ go 1.16
 
 require (
 	github.com/gorilla/handlers v1.4.2
-	github.com/gorilla/mux v1.7.3
+	github.com/gorilla/mux v1.8.0
 	github.com/kr/pretty v0.1.0 // indirect
 	github.com/kyokomi/emoji v2.1.0+incompatible
 	github.com/oxisto/go-httputil v0.3.1
