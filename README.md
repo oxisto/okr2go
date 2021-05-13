@@ -47,7 +47,3 @@ Run the included build script to install all dependencies (React and Go) and bui
 ```
 ./build.sh
 ```
-
-### Launch
-
-Just launch the `okr2go` executable from the `bin` folder representing your system, i.e. `bin/darwin-arm64/okr2go`. A browser window with the web ui should open automatically.

@@ -5,6 +5,9 @@
 *.so
 *.dylib
 okr2go
+okr2go-darwin-amd64
+okr2go-darwin-arm64
+okr2go-linux-amd64
 debug
 
 # Test binary, build with `go test -c`
