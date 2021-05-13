@@ -12,7 +12,7 @@ import (
 	"github.com/oxisto/go-httputil"
 )
 
-//go:embed okr2go-ui/dist/okr2go-ui/*
+//go:embed ui/build/*
 var content embed.FS
 
 // NewRouter returns a configured mux router containing all REST endpoints
@@ -23,7 +23,7 @@ func NewRouter() *mux.Router {
 	router.HandleFunc("/api/objectives/{objectiveID}/results/{resultID}/minus", ResultMinusOne)
 	router.Methods("POST").Path("/api/objectives/{objectiveID}/results").HandlerFunc(PostKeyResult)
 
-	fsys, _ := fs.Sub(content, "okr2go-ui/dist/okr2go-ui")
+	fsys, _ := fs.Sub(content, "ui/build")
 
 	router.PathPrefix("/").Handler(http.FileServer(http.FS(fsys)))
 

@@ -15,7 +15,3 @@ debug
 
 # Log
 okr2go.log
-
-# packr
-*-packr.go
-

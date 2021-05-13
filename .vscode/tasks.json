@@ -14,18 +14,6 @@
             "problemMatcher": [
                 "$go"
             ]
-        },
-        {
-            "label": "packr: build",
-            "type": "shell",
-            "command": "packr build cmd/okr2go/okr2go.go",
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
-            "problemMatcher": [
-                "$go"
-            ]
         }
     ]
 }
