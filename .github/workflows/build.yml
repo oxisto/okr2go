@@ -35,6 +35,6 @@ jobs:
             okr2go-darwin-amd64
             okr2go-darwin-arm64
             okr2go-linux-amd64
-            okr2go-windows-amd64
+            okr2go-windows-amd64.exe
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
