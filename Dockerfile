@@ -1,10 +1,11 @@
 FROM debian:buster-slim
 
+ARG TARGETOS
+ARG TARGETARCH
+
 ADD okr2go .
 
-ARG TARGETPLATFORM
-ARG TARGETARCH
-ARG TARGETOS
-RUN echo "I want okr2go-${TARGETOS}-${TARGETARCH}.zip"
+ADD okr2go-${TARGETOS}-${TARGETARCH}.tar.gz .
+RUN ls *
 
 ENTRYPOINT [ "okr2go" ]

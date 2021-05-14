@@ -6,7 +6,7 @@
 *.dylib
 okr2go
 okr2go.exe
-*.zip
+*.tar.gz
 debug
 
 # Test binary, build with `go test -c`
