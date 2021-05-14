@@ -68,6 +68,16 @@ jobs:
       - name: Build
         run: |
           docker buildx build \
+          --platform linux/arm64,linux/amd64
+          .
+      - name: Push to Registry
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          export VERSION=$1:(echo "${GITHUB_REF}" | cut -d "/" -f3)
+          export VERSION=${VERSION:1:${#VERSION}} # drop the v
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+          docker buildx build \
+          --push \
           --platform linux/arm64,linux/amd64 \
-          --tag ghrc.io/oxisto/okr2go:latest \
+          --tag ghrc.io/oxisto/okr2go:${VERSION},ghrc.io/oxisto/okr2go:latest \
           .
