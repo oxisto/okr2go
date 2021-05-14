@@ -83,5 +83,6 @@ jobs:
           docker buildx build \
           --push \
           --platform linux/arm64,linux/amd64 \
-          --tag ghrc.io/oxisto/okr2go:${VERSION},ghrc.io/oxisto/okr2go:latest \
+          --tag ghrc.io/oxisto/okr2go:${VERSION} \
+          --tag ghrc.io/oxisto/okr2go:latest \
           .
