@@ -81,7 +81,7 @@ export const ObjectiveListItem = ({ objectiveId, objective, triggerRefresh, ...r
         <div className="d-flex w-100 justify-content-between">
             <h5 className="mb-1">{objective.name}</h5>
             <div>
-                <Badge variant="dark" className="bg-primary rounded-pill">
+                <Badge bg="primary" pill={true}>
                     {objective.keyResults?.length} key result(s)
                 </Badge>
             </div>

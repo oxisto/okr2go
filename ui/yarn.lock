@@ -1430,7 +1430,7 @@
     schema-utils "^2.6.5"
     source-map "^0.7.3"
 
-"@popperjs/core@^2.8.6":
+"@popperjs/core@^2.8.6", "@popperjs/core@^2.9.2":
   version "2.9.2"
   resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.9.2.tgz#adea7b6953cbb34651766b0548468e743c6a2353"
   integrity sha512-VZMYa7+fXHdwIq1TDhSXoVmSPEGM/aa+6Aiq3nVVJ9bXr24zScr+NlKFKC3iPljA7ho/GAZr+d2jOf5GIRC30Q==
@@ -1601,7 +1601,7 @@
     "@svgr/plugin-svgo" "^5.5.0"
     loader-utils "^2.0.0"
 
-"@testing-library/dom@^7.28.1":
+"@testing-library/dom@^7.28.1", "@testing-library/dom@^7.31.0":
   version "7.31.0"
   resolved "https://registry.yarnpkg.com/@testing-library/dom/-/dom-7.31.0.tgz#938451abd3ca27e1b69bb395d4a40759fd7f5b3b"
   integrity sha512-0X7ACg4YvTRDFMIuTOEj6B4NpN7i3F/4j5igOcTI5NC5J+N4TribNdErCHOZF1LBWhhcyfwxelVwvoYNMUXTOA==
@@ -1845,7 +1845,7 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react@*", "@types/react@>=16.9.11", "@types/react@>=16.9.35", "@types/react@^17.0.0":
+"@types/react@*", "@types/react@>=16.14.4", "@types/react@>=16.9.11", "@types/react@^17.0.0":
   version "17.0.5"
   resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.5.tgz#3d887570c4489011f75a3fc8f965bf87d09a1bea"
   integrity sha512-bj4biDB9ZJmGAYTWSKJly6bMr4BLUiBrx9ujiJEoP9XIDY9CTaPGxE5QWN/1WjpPLzYF7/jRNnV2nNxNe970sw==
@@ -9080,10 +9080,10 @@ react-app-polyfill@^2.0.0:
     regenerator-runtime "^0.13.7"
     whatwg-fetch "^3.4.1"
 
-react-bootstrap@^1.6.0:
-  version "1.6.0"
-  resolved "https://registry.yarnpkg.com/react-bootstrap/-/react-bootstrap-1.6.0.tgz#5b4f160ce0cd22784cf4271ca90550b4891fdd42"
-  integrity sha512-PaeOGeRC2+JH9Uf1PukJgXcIpfGlrKKHEBZIArymjenYzSJ/RhO2UdNX+e7nalsCFFZLRRgQ0/FKkscW2LmmRg==
+react-bootstrap@^2.0.0-alpha.1:
+  version "2.0.0-alpha.1"
+  resolved "https://registry.yarnpkg.com/react-bootstrap/-/react-bootstrap-2.0.0-alpha.1.tgz#d9e1144e1507356ffb656a892ac1249a1bd95295"
+  integrity sha512-zoIGDzgcBoGiKd/0Rgh5SRyvqgH5OJPMEtXp+1v4Ek8gZDVSPZf58Oy4yhXs30pw4HKBS0s4yzJZcGMFKq3Yuw==
   dependencies:
     "@babel/runtime" "^7.13.8"
     "@restart/context" "^2.1.4"
@@ -9091,7 +9091,7 @@ react-bootstrap@^1.6.0:
     "@types/classnames" "^2.2.10"
     "@types/invariant" "^2.2.33"
     "@types/prop-types" "^15.7.3"
-    "@types/react" ">=16.9.35"
+    "@types/react" ">=16.14.4"
     "@types/react-transition-group" "^4.4.1"
     "@types/warning" "^3.0.0"
     classnames "^2.2.6"
