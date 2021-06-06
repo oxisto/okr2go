@@ -9,7 +9,7 @@ import (
 	"strconv"
 
 	"github.com/gorilla/mux"
-	"github.com/oxisto/go-httputil"
+	"github.com/sirupsen/logrus"
 )
 
 //go:embed ui/build/*
@@ -41,28 +41,28 @@ func PostKeyResult(w http.ResponseWriter, r *http.Request) {
 	// @body Return StatusNotFound if object is nil and StatusBadRequest if error
 	objective, err = getObjectiveFromRequest(w, r)
 	if err != nil {
-		httputil.JSONResponseWithStatus(w, r, nil, err, http.StatusBadRequest)
+		JSONResponseWithStatus(w, r, nil, err, http.StatusBadRequest)
 		return
 	}
 
 	if objective == nil {
-		httputil.JSONResponseWithStatus(w, r, nil, err, http.StatusNotFound)
+		JSONResponseWithStatus(w, r, nil, err, http.StatusNotFound)
 		return
 	}
 
 	if err = json.NewDecoder(r.Body).Decode(&result); err != nil {
-		httputil.JSONResponse(w, r, nil, err)
+		JSONResponse(w, r, nil, err)
 	}
 
 	objective.KeyResults = append(objective.KeyResults, &result)
 
-	httputil.JSONResponse(w, r, result, nil)
+	JSONResponse(w, r, result, nil)
 }
 
 func GetObjectives(w http.ResponseWriter, r *http.Request) {
 	var err error
 
-	httputil.JSONResponse(w, r, objectives, err)
+	JSONResponse(w, r, objectives, err)
 }
 
 // @todo Combine ResultPlusOne and ResultMinusOne functions
@@ -74,26 +74,29 @@ func ResultPlusOne(w http.ResponseWriter, r *http.Request) {
 
 	result, err = getResultFromRequest(w, r)
 	if err != nil {
-		httputil.JSONResponseWithStatus(w, r, nil, err, http.StatusBadRequest)
+		JSONResponseWithStatus(w, r, nil, err, http.StatusBadRequest)
 		return
 	}
 
 	if result == nil {
-		httputil.JSONResponseWithStatus(w, r, nil, err, http.StatusNotFound)
+		JSONResponseWithStatus(w, r, nil, err, http.StatusNotFound)
 		return
 	}
 
 	if result.Current == result.Target {
-		httputil.JSONResponseWithStatus(w, r, result, nil, http.StatusNotModified)
+		JSONResponseWithStatus(w, r, result, nil, http.StatusNotModified)
 		return
 	}
 
 	result.Current++
 
-	SaveObjectives()
+	err = SaveObjectives()
+	if err != nil {
+		JSONResponseWithStatus(w, r, nil, err, http.StatusBadRequest)
+		return
+	}
 
-	httputil.JSONResponseWithStatus(w, r, result, nil, http.StatusOK)
-	return
+	JSONResponseWithStatus(w, r, result, nil, http.StatusOK)
 }
 
 func ResultMinusOne(w http.ResponseWriter, r *http.Request) {
@@ -104,26 +107,29 @@ func ResultMinusOne(w http.ResponseWriter, r *http.Request) {
 
 	result, err = getResultFromRequest(w, r)
 	if err != nil {
-		httputil.JSONResponseWithStatus(w, r, nil, err, http.StatusBadRequest)
+		JSONResponseWithStatus(w, r, nil, err, http.StatusBadRequest)
 		return
 	}
 
 	if result == nil {
-		httputil.JSONResponseWithStatus(w, r, nil, err, http.StatusNotFound)
+		JSONResponseWithStatus(w, r, nil, err, http.StatusNotFound)
 		return
 	}
 
 	if result.Current == 0 {
-		httputil.JSONResponseWithStatus(w, r, result, nil, http.StatusNotModified)
+		JSONResponseWithStatus(w, r, result, nil, http.StatusNotModified)
 		return
 	}
 
 	result.Current--
 
-	SaveObjectives()
+	err = SaveObjectives()
+	if err != nil {
+		JSONResponseWithStatus(w, r, nil, err, http.StatusBadRequest)
+		return
+	}
 
-	httputil.JSONResponseWithStatus(w, r, result, nil, http.StatusOK)
-	return
+	JSONResponseWithStatus(w, r, result, nil, http.StatusOK)
 }
 
 func getObjectiveFromRequest(w http.ResponseWriter, r *http.Request) (objective *Objective, err error) {
@@ -134,11 +140,11 @@ func getObjectiveFromRequest(w http.ResponseWriter, r *http.Request) (objective 
 	)
 
 	if objectiveIDString, ok = mux.Vars(r)["objectiveID"]; !ok {
-		return nil, errors.New("Request did not contain a resultID")
+		return nil, errors.New("request did not contain a resultID")
 	}
 
 	if objectiveID, err = strconv.Atoi(objectiveIDString); err != nil {
-		return nil, errors.New("Could not parse objectiveID")
+		return nil, errors.New("could not parse objectiveID")
 	}
 
 	objective = objectives.FindObjective(objectiveID)
@@ -160,10 +166,43 @@ func getResultFromRequest(w http.ResponseWriter, r *http.Request) (result *KeyRe
 	}
 
 	if resultID, ok = mux.Vars(r)["resultID"]; !ok {
-		return nil, errors.New("Request did not contain a resultID")
+		return nil, errors.New("request did not contain a resultID")
 	}
 
 	result = objective.FindKeyResult(resultID)
 
 	return result, nil
+}
+
+// JSONResponseWithStatus returns a JSON encoded object with statusCode, if error is nil.
+// Otherwise the error is returned and status code is set to http.StatusInternalServerError
+func JSONResponseWithStatus(w http.ResponseWriter, r *http.Request, object interface{}, err error, statusCode int) {
+	// uh-uh, we have an error
+	if err != nil {
+		logrus.Errorf("An error occured during processing of a REST request: %s", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	// return not found if object is nil
+	if object == nil {
+		http.NotFound(w, r)
+		return
+	}
+
+	// otherwise, lets try to decode the JSON
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(statusCode)
+
+	if err := json.NewEncoder(w).Encode(object); err != nil {
+		// uh-uh we couldn't decode the JSON
+		logrus.Errorf("An error occured during encoding of the JSON response: %v. Payload was: %+v", err, object)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+}
+
+// JSONResponse returns a JSON encoded object with http.StatusOK, if error is nil.
+// Otherwise the error is returned and status code is set to http.StatusInternalServerError
+func JSONResponse(w http.ResponseWriter, r *http.Request, object interface{}, err error) {
+	JSONResponseWithStatus(w, r, object, err, http.StatusOK)
 }
