@@ -24,3 +24,5 @@ updates:
       day: sunday
     labels:
       - dependencies
+    ignore:    
+       - update-types: ["version-update:semver-patch"] # we are not interested in patch updates. this will still pull in security updates
