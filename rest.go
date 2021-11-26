@@ -12,7 +12,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-//go:embed ui/build/*
+//go:embed ui/build/* ui/build/_app/pages/* ui/build/_app/assets/pages/*
 var content embed.FS
 
 // NewRouter returns a configured mux router containing all REST endpoints

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd ui && yarn install --ignore-optional && yarn build && cd ..
+cd ui && yarn install && yarn build && cd ..
 go mod download
 
 if [ "$1" = "--ci" ]; then
