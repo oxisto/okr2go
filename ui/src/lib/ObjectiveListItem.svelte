@@ -3,7 +3,8 @@
 
 <script lang="ts">
 	import { Badge, Button, ListGroupItem, Progress, Table } from 'sveltestrap';
-	import KeyResultRow from '$lib/KeyResultRow.svelte';
+	import KeyResultRow, { KeyResultEvent } from '$lib/KeyResultRow.svelte';
+
 	import {
 		createResult,
 		decreaseResultValue,
@@ -15,15 +16,15 @@
 	export let objectiveId: number;
 	export let objective: Objective;
 
-	function onMinus(keyResult: KeyResult, keyResultIdx: number, e: Event) {
-		decreaseResultValue(objectiveId, keyResult).then((result: KeyResult) => {
-			objective.keyResults[keyResultIdx] = result;
+	function onMinus(e: CustomEvent<KeyResultEvent>) {
+		decreaseResultValue(objectiveId, e.detail.keyResult).then((result: KeyResult) => {
+			objective.keyResults[e.detail.keyResultIdx] = result;
 		});
 	}
 
-	function onPlus(keyResult: KeyResult, keyResultIdx: number, e: Event) {
-		increaseResultValue(objectiveId, keyResult).then((result: KeyResult) => {
-			objective.keyResults[keyResultIdx] = result;
+	function onPlus(e: CustomEvent<KeyResultEvent>) {
+		increaseResultValue(objectiveId, e.detail.keyResult).then((result: KeyResult) => {
+			objective.keyResults[e.detail.keyResultIdx] = result;
 		});
 	}
 
@@ -69,7 +70,7 @@
 	<Table class="mt-2">
 		<tbody>
 			{#each objective.keyResults as keyResult, keyResultIdx}
-				<KeyResultRow {keyResult} {keyResultIdx} {onMinus} {onPlus} />
+				<KeyResultRow {keyResult} {keyResultIdx} on:minus={onMinus} on:plus={onPlus} />
 			{/each}
 		</tbody>
 	</Table>
