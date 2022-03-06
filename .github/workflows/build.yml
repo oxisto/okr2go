@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2.4.0
+        uses: actions/checkout@v3
       - name: Set up Go 1.16
         uses: actions/setup-go@v2.2.0
         with:
@@ -55,7 +55,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2.4.0
+        uses: actions/checkout@v3
       - name: Set up Docker Buildx
         id: buildx
         uses: docker/setup-buildx-action@v1
