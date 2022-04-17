@@ -66,7 +66,7 @@ jobs:
           echo "Status:    ${{ steps.buildx.outputs.status }}"
           echo "Flags:     ${{ steps.buildx.outputs.flags }}"
           echo "Platforms: ${{ steps.buildx.outputs.platforms }}"
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v3
         with:
           path: .
       - name: Build
