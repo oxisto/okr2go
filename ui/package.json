@@ -27,7 +27,7 @@
     "svelte-check": "^3.1.4",
     "svelte-preprocess": "^4.10.1",
     "sveltestrap": "^5.9.0",
-    "tslib": "^2.4.0",
+    "tslib": "^2.5.0",
     "typescript": "^4.8.2"
   },
   "type": "module"
